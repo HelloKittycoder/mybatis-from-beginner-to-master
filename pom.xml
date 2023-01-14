@@ -21,6 +21,7 @@
 
     <modules>
         <module>simple-start</module>
+        <module>simple-all</module>
     </modules>
 
     <dependencyManagement>

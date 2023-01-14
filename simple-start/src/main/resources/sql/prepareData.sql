@@ -2,6 +2,7 @@ create database mybatis character set utf8mb4 collate utf8mb4_general_ci;
 
 use mybatis;
 
+-- 创建country表
 create table country (
     id int not null auto_increment,
     countryname varchar(255) null,

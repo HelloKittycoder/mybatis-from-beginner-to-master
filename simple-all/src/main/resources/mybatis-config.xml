@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <typeAliases>
+        <package name="tk.mybatis.simple.model"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC">
+                <property name="" value=""/>
+            </transactionManager>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis?serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!-- 写法1：把每个需要加载的mapper.xml文件列出来 -->
+        <!--
+        <mapper resource="tk/mybatis/simple/mapper/CountryMapper.xml"/>
+        <mapper resource="tk/mybatis/simple/mapper/UserMapper.xml"/>
+        <mapper resource="tk/mybatis/simple/mapper/RoleMapper.xml"/>
+        <mapper resource="tk/mybatis/simple/mapper/PrivilegeMapper.xml"/>
+        <mapper resource="tk/mybatis/simple/mapper/UserRoleMapper.xml"/>
+        <mapper resource="tk/mybatis/simple/mapper/RolePrivilegeMapper.xml"/>-->
+
+        <!-- 写法2：提供mapper接口所在的目录，项目启动时mybatis直接扫描该目录下的所有Mapper接口关联的mapper.xml文件
+        这种写法要求mapper接口目录和mapper.xml所在目录是一样的（https://blog.csdn.net/wolfcode_cn/article/details/85836995）
+        -->
+        <package name="tk.mybatis.simple.mapper"/>
+    </mappers>
+</configuration>

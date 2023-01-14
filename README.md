@@ -4,4 +4,9 @@
 #### 第1章 MyBatis入门
 simple-start
 
-使用前，先执行下country.sql
+使用前，先执行下prepareData.sql
+
+#### 第2章 MyBatis XML方式的基本用法
+simple-all
+
+使用前，先执行下prepareData.sql
