@@ -8,10 +8,7 @@ import tk.mybatis.simple.model.SysRole2;
 import tk.mybatis.simple.model.SysRoleExtend;
 import tk.mybatis.simple.model.SysUser;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author shucheng
@@ -273,6 +270,194 @@ public class UserMapperTest extends BaseMapperTest {
             // 角色数量大于0个
             Assert.assertTrue(roleList.size() > 0);
         } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByUser() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+
+            // 只查询用户名时
+            SysUser query = new SysUser();
+            query.setUserName("ad");
+            List<SysUser> userList = userMapper.selectByUser(query);
+            Assert.assertTrue(userList.size() > 0);
+
+            // 只查询用户邮箱时
+            query = new SysUser();
+            query.setUserEmail("test@mybatis.tk");
+            userList = userMapper.selectByUser(query);
+            Assert.assertTrue(userList.size() > 0);
+
+            // 同时查询用户名和邮箱时
+            query = new SysUser();
+            query.setUserName("ad");
+            query.setUserEmail("test@mybatis.tk");
+            userList = userMapper.selectByUser(query);
+            // 由于没有同时符合这两个条件的用户，因此查询结果数为0
+            Assert.assertTrue(userList.size() == 0);
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testUpdateByIdSelective() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            // 创建一个新的user对象
+            SysUser user = new SysUser();
+            // 更新 id = 1 的用户
+            user.setId(1L);
+            // 修改邮箱
+            user.setUserEmail("test@mybatis.tk");
+            // 更新邮箱，特别注意，这里的返回值result是执行的SQL影响的行数
+            int result = userMapper.updateByIdSelective(user);
+            // 只更新1条数据
+            Assert.assertEquals(1, result);
+            // 根据当前id查询修改后的数据
+            user = userMapper.selectById(1L);
+            // 修改后的名字保持不变，但是邮箱变成了新的
+            Assert.assertEquals("admin", user.getUserName());
+            Assert.assertEquals("test@mybatis.tk", user.getUserEmail());
+        } finally {
+            // 为了不影响其他测试，这里选择回滚
+            sqlSession.rollback();
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testInsert2Selective() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            // 创建一个新的user对象
+            SysUser user = new SysUser();
+            user.setUserName("test-selective");
+            user.setUserPassword("123456");
+            // user.setUserEmail("test-selective@mybatis.tk");
+            user.setUserInfo("test info");
+            user.setCreateTime(new Date());
+            // 插入数据库
+            userMapper.insert2(user);
+            // 获取插入的这条数据
+            user = userMapper.selectById(user.getId());
+            Assert.assertEquals("test@mybatis.tk", user.getUserEmail());
+        } finally {
+            // 为了不影响其他测试，这里选择回滚
+            sqlSession.rollback();
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByIdOrUserName() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            /**
+             * 这里假设id和userName都是唯一的
+             */
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            // 同时传id和userName时（此时when先匹配到id，不会再进行后续匹配了）
+            SysUser query = new SysUser();
+            query.setId(1L);
+            query.setUserName("admin");
+            SysUser user = userMapper.selectByIdOrUserName(query);
+            Assert.assertNotNull(user);
+            // 只传userName时
+            query.setId(null);
+            user = userMapper.selectByIdOrUserName(query);
+            Assert.assertNotNull(user);
+            // 当id和userName都为空时
+            query.setUserName(null);
+            user = userMapper.selectByIdOrUserName(query);
+            Assert.assertNull(user);
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectByIdList() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<Long> idList = new ArrayList<Long>();
+            idList.add(1L);
+            idList.add(1001L);
+            // 业务逻辑中必须校验idList.size()>0
+            List<SysUser> userList = userMapper.selectByIdList(idList);
+            Assert.assertEquals(2, userList.size());
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testInsertList() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<SysUser> userList = new ArrayList<SysUser>();
+            for (int i = 0; i < 2; i++) {
+                SysUser user = new SysUser();
+                user.setUserName("test" + i);
+                user.setUserPassword("123456");
+                user.setUserEmail("test@mybatis.tk");
+                userList.add(user);
+            }
+            // 将新建的对象批量插入数据库中
+            // 特别注意这里的返回值result是执行的SQL影响的行数
+            int result = userMapper.insertList(userList);
+            Assert.assertEquals(2, result);
+
+            /**
+             * 从MyBatis 3.3.1版本开始，MyBatis开始支持批量新增回写主键值的功能，只要添加
+             * useGeneratedKeys="true" keyProperty="id"这两个属性即可
+             */
+            /*for (SysUser user : userList) {
+                System.out.println(user.getId());
+            }*/
+        } finally {
+            // 为了不影响其他测试，这里选择回滚
+            sqlSession.rollback();
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testUpdateByMap() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            Map<String, Object> map = new HashMap<String, Object>();
+            // 查询条件，同样也是更新字段，必须保证该值存在
+            map.put("id", 1L);
+            // 要更新的其他字段
+            map.put("user_email", "test@mybatis.tk");
+            map.put("user_password", "12345678");
+            // 更新数据，特别注意，这里的返回值result是执行的SQL影响的行数
+            int result = userMapper.updateByMap(map);
+            // 只更新1条数据
+            Assert.assertEquals(1, result);
+            // 根据当前id查询修改后的数据
+            SysUser user = userMapper.selectById(1L);
+            Assert.assertEquals("test@mybatis.tk", user.getUserEmail());
+        } finally {
+            // 为了不影响其他测试，这里选择回滚
+            sqlSession.rollback();
             // 不要忘记关闭sqlSession
             sqlSession.close();
         }

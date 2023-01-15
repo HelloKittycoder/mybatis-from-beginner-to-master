@@ -26,6 +26,8 @@ create table sys_user (
     primary key (id)
 );
 alter table sys_user comment '用户表';
+alter table sys_user modify column user_email varchar(50) null default 'test@mybatis.tk'
+comment '邮箱' after user_password;
 
 create table sys_role (
     id bigint not null auto_increment comment '角色ID',
