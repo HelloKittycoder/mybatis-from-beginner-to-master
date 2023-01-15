@@ -78,7 +78,7 @@ public interface UserMapper {
     int updateById(SysUser sysUser);
 
     /**
-     * 根据主键更新
+     * 根据主键删除
      * @param id
      * @return
      */

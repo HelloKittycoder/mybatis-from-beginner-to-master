@@ -12,6 +12,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <mybatis.verion>3.4.1</mybatis.verion>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.mybatis</groupId>

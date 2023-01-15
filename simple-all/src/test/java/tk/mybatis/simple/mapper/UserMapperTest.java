@@ -225,7 +225,7 @@ public class UserMapperTest extends BaseMapperTest {
             Assert.assertNotNull(user);
             // 调用方法删除
             Assert.assertEquals(1, userMapper.deleteById(1L));
-            // 再次查询，这时应该没有值，为nll
+            // 再次查询，这时应该没有值，为null
             Assert.assertNull(userMapper.selectById(1L));
 
             /*// 写法2：
