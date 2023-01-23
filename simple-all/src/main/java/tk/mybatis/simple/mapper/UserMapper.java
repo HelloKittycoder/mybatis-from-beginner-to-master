@@ -139,4 +139,38 @@ public interface UserMapper {
      * @return
      */
     int updateByMap(Map<String, Object> map);
+
+    /**
+     * 根据用户id获取用户信息和用户的角色信息
+     * @param id
+     * @return
+     */
+    SysUser selectUserAndRoleById(Long id);
+
+    /**
+     * 根据用户id获取用户信息和用户的角色信息
+     * @param id
+     * @return
+     */
+    SysUser selectUserAndRoleById2(Long id);
+
+    /**
+     * 根据用户id获取用户信息和用户的角色信息
+     * @param id
+     * @return
+     */
+    SysUser selectUserAndRoleByIdSelect(Long id);
+
+    /**
+     * 获取所有的用户以及对应的所有角色
+     * @return
+     */
+    List<SysUser> selectAllUserAndRoles();
+
+    /**
+     * 通过嵌套查询获取指定用户的信息以及用户的角色和权限信息
+     * @param id
+     * @return
+     */
+    SysUser selectAllUserAndRolesSelect(Long id);
 }

@@ -12,8 +12,8 @@ import java.util.List;
 public interface RoleMapper {
 
     @Select({"select id, role_name roleName, enabled, " +
-                "create_by createBy, " +
-                "create_time createTime " +
+                "create_by `createInfo.createBy`, " +
+                "create_time `createInfo.createTime` " +
                 "from sys_role " +
             "where id = #{id}"})
     SysRole selectById(Long id);
@@ -22,8 +22,8 @@ public interface RoleMapper {
             @Result(property = "id", column = "id", id = true),
             @Result(property = "roleName", column = "role_name"),
             @Result(property = "enabled", column = "enabled"),
-            @Result(property = "createBy", column = "create_by"),
-            @Result(property = "createTime", column = "create_time")
+            @Result(property = "createInfo.createBy", column = "create_by"),
+            @Result(property = "createInfo.createTime", column = "create_time")
     })
     @Select("select id, role_name roleName, enabled, create_by, create_time from sys_role where id = #{id}")
     SysRole selectById2(Long id);
@@ -38,7 +38,7 @@ public interface RoleMapper {
      * @return
      */
     @Insert({"insert into sys_role(id, role_name, enabled, create_by, create_time)",
-            "values(#{id}, #{roleName}, #{enabled}, #{createBy}, #{createTime, jdbcType=TIMESTAMP})"})
+            "values(#{id}, #{roleName}, #{enabled}, #{createInfo.createBy}, #{createInfo.createTime, jdbcType=TIMESTAMP})"})
     int insert(SysRole sysRole);
 
     /**
@@ -47,7 +47,7 @@ public interface RoleMapper {
      * @return
      */
     @Insert({"insert into sys_role(role_name, enabled, create_by, create_time)",
-            "values(#{roleName}, #{enabled}, #{createBy}, #{createTime, jdbcType=TIMESTAMP})"})
+            "values(#{roleName}, #{enabled}, #{createInfo.createBy}, #{createInfo.createTime, jdbcType=TIMESTAMP})"})
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert2(SysRole sysRole);
 
@@ -57,7 +57,7 @@ public interface RoleMapper {
      * @return
      */
     @Insert({"insert into sys_role(role_name, enabled, create_by, create_time)",
-            "values(#{roleName}, #{enabled}, #{createBy}, #{createTime, jdbcType=TIMESTAMP})"})
+            "values(#{roleName}, #{enabled}, #{createInfo.createBy}, #{createInfo.createTime, jdbcType=TIMESTAMP})"})
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id", resultType = Long.class, before = false)
     int insert3(SysRole sysRole);
 
@@ -69,8 +69,8 @@ public interface RoleMapper {
     @Update({"update sys_role " +
             "set role_name = #{roleName}, " +
                 "enabled = #{enabled}, " +
-                "create_by = #{createBy}, " +
-                "create_time = #{createTime, jdbcType=TIMESTAMP} " +
+                "create_by = #{createInfo.createBy}, " +
+                "create_time = #{createInfo.createTime, jdbcType=TIMESTAMP} " +
             "where id = #{id}"})
     int updateById(SysRole sysRole);
 
@@ -81,4 +81,17 @@ public interface RoleMapper {
      */
     @Delete("delete from sys_role where id = #{id}")
     int deleteById(Long id);
+
+    /**
+     * 查询角色及其对应权限
+     * @return
+     */
+    List<SysRole> selectAllRoleAndPrivileges();
+
+    /**
+     * 根据用户ID获取用户的角色信息
+     * @param userId
+     * @return
+     */
+    List<SysRole> selectRoleByUserIdChoose(Long userId);
 }

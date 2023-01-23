@@ -3,6 +3,8 @@ package tk.mybatis.simple.mapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
 import org.junit.Test;
+import tk.mybatis.simple.model.CreateInfo;
+import tk.mybatis.simple.model.SysPrivilege;
 import tk.mybatis.simple.model.SysRole;
 
 import java.util.Date;
@@ -85,8 +87,10 @@ public class RoleMapperTest extends BaseMapperTest {
             SysRole role = new SysRole();
             role.setRoleName("测试用户");
             role.setEnabled(1);
-            role.setCreateBy("1");
-            role.setCreateTime(new Date());
+            CreateInfo createInfo = new CreateInfo();
+            createInfo.setCreateBy("1");
+            createInfo.setCreateTime(new Date());
+            role.setCreateInfo(createInfo);
             int result = roleMapper.insert(role);
             // 只插入1条数据
             Assert.assertEquals(1, result);
@@ -114,8 +118,10 @@ public class RoleMapperTest extends BaseMapperTest {
             SysRole role = new SysRole();
             role.setRoleName("测试用户");
             role.setEnabled(1);
-            role.setCreateBy("1");
-            role.setCreateTime(new Date());
+            CreateInfo createInfo = new CreateInfo();
+            createInfo.setCreateBy("1");
+            createInfo.setCreateTime(new Date());
+            role.setCreateInfo(createInfo);
             int result = roleMapper.insert2(role);
             // 只插入1条数据
             Assert.assertEquals(1, result);
@@ -143,8 +149,10 @@ public class RoleMapperTest extends BaseMapperTest {
             SysRole role = new SysRole();
             role.setRoleName("测试用户");
             role.setEnabled(1);
-            role.setCreateBy("1");
-            role.setCreateTime(new Date());
+            CreateInfo createInfo = new CreateInfo();
+            createInfo.setCreateBy("1");
+            createInfo.setCreateTime(new Date());
+            role.setCreateInfo(createInfo);
             int result = roleMapper.insert3(role);
             // 只插入1条数据
             Assert.assertEquals(1, result);
@@ -205,6 +213,56 @@ public class RoleMapperTest extends BaseMapperTest {
             // 由于默认的sqlSessionFactory.openSession()是不自动提交的
             // 因此不手动执行commit也不会提交到数据库
             sqlSession.rollback();
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllRoleAndPrivileges() {
+        // 获取 sqlSession
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            List<SysRole> roleList = roleMapper.selectAllRoleAndPrivileges();
+            // 能获取到角色列表
+            Assert.assertNotNull(roleList.size() > 0);
+            // 角色下面有权限数据（“管理员”角色下能取到权限数据）
+            Assert.assertTrue(roleList.get(0).getPrivilegeList().size() > 0);
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectRoleByUserIdChoose() {
+        // 获取 sqlSession
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            // 由于数据库数据 enable 都是1，所以给其中一个角色的enable赋值为0
+            SysRole role = roleMapper.selectById(2L);
+            role.setEnabled(0);
+            roleMapper.updateById(role);
+            // 获取用户1的角色
+            List<SysRole> roleList = roleMapper.selectRoleByUserIdChoose(1L);
+            for (SysRole r : roleList) {
+                System.out.println("角色名：" + r.getRoleName());
+                if (r.getId().equals(1L)) {
+                    // 第一个角色存在权限信息
+                    Assert.assertNotNull(r.getPrivilegeList());
+                } else if (r.getId().equals(2L)) {
+                    // 第二个角色的权限为null
+                    Assert.assertNull(r.getPrivilegeList());
+                    continue;
+                }
+
+                for (SysPrivilege privilege : r.getPrivilegeList()) {
+                    System.out.println("权限名：" + privilege.getPrivilegeName());
+                }
+            }
+        } finally {
             // 不要忘记关闭sqlSession
             sqlSession.close();
         }

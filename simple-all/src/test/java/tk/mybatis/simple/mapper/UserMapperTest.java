@@ -3,10 +3,7 @@ package tk.mybatis.simple.mapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
 import org.junit.Test;
-import tk.mybatis.simple.model.SysRole;
-import tk.mybatis.simple.model.SysRole2;
-import tk.mybatis.simple.model.SysRoleExtend;
-import tk.mybatis.simple.model.SysUser;
+import tk.mybatis.simple.model.*;
 
 import java.util.*;
 
@@ -458,6 +455,89 @@ public class UserMapperTest extends BaseMapperTest {
         } finally {
             // 为了不影响其他测试，这里选择回滚
             sqlSession.rollback();
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectUserAndRoleById() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            // 获取 UserMapper 接口
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            // 特别注意，在测试数据中，id=1L的用户有两个角色，不适合这个例子
+            // 这里使用只有一个角色的用户（id=1001L）
+            SysUser user = userMapper.selectUserAndRoleById2(1001L);
+            // user 不为空
+            Assert.assertNotNull(user);
+            // user.role 也不为空
+            Assert.assertNotNull(user.getRole());
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectUserAndRoleByIdSelect() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            // 获取 UserMapper 接口
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            // 这里使用只有一个角色的用户（id = 1001L）
+            SysUser user = userMapper.selectUserAndRoleByIdSelect(1001L);
+            // user 不为空
+            Assert.assertNotNull(user);
+            System.out.println("调用 user.equals(null)");
+            user.equals(null);
+            // user.role 也不为空
+            System.out.println("调用 user.getRole()");
+            Assert.assertNotNull(user.getRole());
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllUserAndRoles() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            // 获取 UserMapper 接口
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<SysUser> userList = userMapper.selectAllUserAndRoles();
+            System.out.println("用户数：" + userList.size());
+            for (SysUser user : userList) {
+                System.out.println("用户名：" + user.getUserName());
+                for (SysRole role : user.getRoleList()) {
+                    System.out.println("角色名：" + role.getRoleName());
+                    for (SysPrivilege privilege : role.getPrivilegeList()) {
+                        System.out.println("权限名：" + privilege.getPrivilegeName());
+                    }
+                }
+            }
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllUserAndRolesSelect() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            // 获取 UserMapper 接口
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            SysUser user = userMapper.selectAllUserAndRolesSelect(1L);
+            System.out.println("用户名：" + user.getUserName());
+            for (SysRole role : user.getRoleList()) {
+                System.out.println("角色名：" + role.getRoleName());
+                for (SysPrivilege privilege : role.getPrivilegeList()) {
+                    System.out.println("权限名：" + privilege.getPrivilegeName());
+                }
+            }
+        } finally {
             // 不要忘记关闭sqlSession
             sqlSession.close();
         }

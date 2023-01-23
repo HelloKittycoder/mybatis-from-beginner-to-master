@@ -6,6 +6,10 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <setting name="logImpl" value="LOG4J"/>
+        <!-- 是否要积极加载，这里为false，即要延迟加载 -->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!-- 当调用下面配置的方法时，加载全部的延迟加载数据，以下是默认值 -->
+        <!--<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>-->
     </settings>
 
     <typeAliases>
