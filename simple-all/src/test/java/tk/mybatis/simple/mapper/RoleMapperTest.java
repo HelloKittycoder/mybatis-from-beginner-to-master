@@ -6,6 +6,7 @@ import org.junit.Test;
 import tk.mybatis.simple.model.CreateInfo;
 import tk.mybatis.simple.model.SysPrivilege;
 import tk.mybatis.simple.model.SysRole;
+import tk.mybatis.simple.type.Enabled;
 
 import java.util.Date;
 import java.util.List;
@@ -86,7 +87,7 @@ public class RoleMapperTest extends BaseMapperTest {
             // 调用 insert 方法，新增角色
             SysRole role = new SysRole();
             role.setRoleName("测试用户");
-            role.setEnabled(1);
+            role.setEnabled(Enabled.enabled);
             CreateInfo createInfo = new CreateInfo();
             createInfo.setCreateBy("1");
             createInfo.setCreateTime(new Date());
@@ -117,7 +118,7 @@ public class RoleMapperTest extends BaseMapperTest {
             // 调用 insert 方法，新增角色
             SysRole role = new SysRole();
             role.setRoleName("测试用户");
-            role.setEnabled(1);
+            role.setEnabled(Enabled.enabled);
             CreateInfo createInfo = new CreateInfo();
             createInfo.setCreateBy("1");
             createInfo.setCreateTime(new Date());
@@ -148,7 +149,7 @@ public class RoleMapperTest extends BaseMapperTest {
             // 调用 insert 方法，新增角色
             SysRole role = new SysRole();
             role.setRoleName("测试用户");
-            role.setEnabled(1);
+            role.setEnabled(Enabled.enabled);
             CreateInfo createInfo = new CreateInfo();
             createInfo.setCreateBy("1");
             createInfo.setCreateTime(new Date());
@@ -243,7 +244,7 @@ public class RoleMapperTest extends BaseMapperTest {
             RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
             // 由于数据库数据 enable 都是1，所以给其中一个角色的enable赋值为0
             SysRole role = roleMapper.selectById(2L);
-            role.setEnabled(0);
+            role.setEnabled(Enabled.disabled);
             roleMapper.updateById(role);
             // 获取用户1的角色
             List<SysRole> roleList = roleMapper.selectRoleByUserIdChoose(1L);
@@ -263,6 +264,28 @@ public class RoleMapperTest extends BaseMapperTest {
                 }
             }
         } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    // 6.3.1 使用MyBatis提供的枚举处理器
+    @Test
+    public void testEnumUpdateById() {
+        // 获取 sqlSession
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            // 先查询出角色
+            SysRole role = roleMapper.selectById(2L);
+            Assert.assertEquals(Enabled.enabled, role.getEnabled());
+            // 然后修改角色的 enabled 值为 disabled
+            role.setEnabled(Enabled.disabled);
+            roleMapper.updateById(role);
+            // 验证修改是否成功
+            Assert.assertEquals(Enabled.disabled, roleMapper.selectById(2L).getEnabled());
+        } finally {
+            sqlSession.rollback();
             // 不要忘记关闭sqlSession
             sqlSession.close();
         }

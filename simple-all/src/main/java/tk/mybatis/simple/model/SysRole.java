@@ -1,5 +1,7 @@
 package tk.mybatis.simple.model;
 
+import tk.mybatis.simple.type.Enabled;
+
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ public class SysRole {
     /**
      * 有效标志
      */
-    private Integer enabled;
+    private Enabled enabled;
     /**
      * 创建信息
      */
@@ -45,11 +47,11 @@ public class SysRole {
         this.roleName = roleName;
     }
 
-    public Integer getEnabled() {
+    public Enabled getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Integer enabled) {
+    public void setEnabled(Enabled enabled) {
         this.enabled = enabled;
     }
 
