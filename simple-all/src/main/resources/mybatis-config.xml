@@ -18,7 +18,7 @@
 
     <typeHandlers>
         <typeHandler javaType="tk.mybatis.simple.type.Enabled"
-                     handler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+                     handler="tk.mybatis.simple.type.EnabledTypeHandler"/>
     </typeHandlers>
 
     <environments default="development">
