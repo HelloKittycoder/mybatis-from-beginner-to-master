@@ -51,6 +51,16 @@
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
         </dependency>
+
+        <!-- 对Java8日期（JSR-310）的支持
+        MyBatis从3.4.0版本开始增加了对Java8（JSR-310）的支持，如果使用3.4.0及以上版本，
+        只需要在Maven的pom.xml中添加如下依赖即可
+        -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-typehandlers-jsr310</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>

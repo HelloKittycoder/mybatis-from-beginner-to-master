@@ -2,6 +2,7 @@ package tk.mybatis.simple.mapper;
 
 import org.apache.ibatis.annotations.*;
 import tk.mybatis.simple.model.SysRole;
+import tk.mybatis.simple.model.SysRoleJdk8Date;
 
 import java.util.List;
 
@@ -94,4 +95,10 @@ public interface RoleMapper {
      * @return
      */
     List<SysRole> selectRoleByUserIdChoose(Long userId);
+
+    /**
+     * 测试mybatis对Java8日期（JSR-310）的支持
+     * @return
+     */
+    List<SysRoleJdk8Date> selectRoleListJdk8Date();
 }

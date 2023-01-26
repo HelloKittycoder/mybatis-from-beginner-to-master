@@ -6,6 +6,7 @@ import org.junit.Test;
 import tk.mybatis.simple.model.CreateInfo;
 import tk.mybatis.simple.model.SysPrivilege;
 import tk.mybatis.simple.model.SysRole;
+import tk.mybatis.simple.model.SysRoleJdk8Date;
 import tk.mybatis.simple.type.Enabled;
 
 import java.util.Date;
@@ -287,6 +288,19 @@ public class RoleMapperTest extends BaseMapperTest {
         } finally {
             sqlSession.rollback();
             // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectRoleListJdk8Date() {
+        // 获取 sqlSession
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            List<SysRoleJdk8Date> roleList = roleMapper.selectRoleListJdk8Date();
+            System.out.println(roleList);
+        } finally {
             sqlSession.close();
         }
     }
