@@ -6,7 +6,9 @@ import org.junit.Test;
 import tk.mybatis.simple.model.Country;
 import tk.mybatis.simple.model.CountryExample;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author shucheng
@@ -112,6 +114,24 @@ public class CountryMapperTest extends BaseMapperTest {
             countryMapper.deleteByExample(example);
             // 使用 countByExample 查询符合条件的数量，因为已删除，所以这里应该是0
             Assert.assertEquals(0, countryMapper.countByExample(example));
+        } finally {
+            // 不要忘记关闭 sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testMapperWithStartPage3() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            CountryMapper countryMapper = sqlSession.getMapper(CountryMapper.class);
+            // 获取第1页，10条内容，默认查询总数count
+            Map<String, Object> params = new HashMap<String, Object>();
+            countryMapper.selectCountries(params);
+            List<Country> list1 = (List<Country>) params.get("list1");
+            List<Country> list2 = (List<Country>) params.get("list2");
+            Assert.assertNotNull(list1);
+            Assert.assertNotNull(list2);
         } finally {
             // 不要忘记关闭 sqlSession
             sqlSession.close();

@@ -1,6 +1,8 @@
 package tk.mybatis.simple.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.simple.model.Country;
 import tk.mybatis.simple.model.CountryExample;
@@ -93,4 +95,12 @@ public interface CountryMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Country record);
+
+    /**
+     * 执行Oracle中的存储过程
+     * （书上写的是返回Object对象，这里其实返回结果为null，返回值写void就可以了）
+     * @param params
+     * @return
+     */
+    void selectCountries(Map<String, Object> params);
 }

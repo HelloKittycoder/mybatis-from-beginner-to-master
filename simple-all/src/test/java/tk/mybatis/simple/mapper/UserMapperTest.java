@@ -566,7 +566,7 @@ public class UserMapperTest extends BaseMapperTest {
         try {
             // 获取 UserMapper 接口
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            Map<String, Object> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<String, Object>();
             params.put("userName", "ad");
             params.put("offset", 0);
             params.put("limit", 10);

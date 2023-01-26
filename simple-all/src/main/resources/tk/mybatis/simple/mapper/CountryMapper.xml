@@ -243,4 +243,11 @@
   <select id="selectAll" resultType="Country">
       select id, countryname, countrycode from country
   </select>
+
+  <select id="selectCountries" statementType="CALLABLE" useCache="false">
+    {call SELECT_COUNTRIES(
+        #{list1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=BaseResultMap},
+        #{list2, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=BaseResultMap}
+    )}
+  </select>
 </mapper>

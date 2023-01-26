@@ -87,3 +87,28 @@ DELETE FROM sys_user where id = userId;
 END
 ;;
 DELIMITER ;
+
+####### Oracle存储过程部分 Start #######
+-- oracle存储过程-准备数据
+create table country (
+    id int not NULL,
+    countryname VARCHAR2(255),
+    countrycode VARCHAR2(255),
+    primary key (id)
+);
+
+insert into country (id, countryname, countrycode) VALUES(1, 'China', 'CN');
+insert into country (id, countryname, countrycode) VALUES(2, 'America', 'US');
+insert into country (id, countryname, countrycode) VALUES(3, 'Russia', 'RU');
+insert into country (id, countryname, countrycode) VALUES(4, 'England', 'GB');
+insert into country (id, countryname, countrycode) VALUES(5, 'France', 'FR');
+
+-- oracle存储过程-创建存储过程
+CREATE OR REPLACE PROCEDURE select_countries(
+       ref_cur1 OUT sys_refcursor,
+       ref_cur2 OUT SYS_REFCURSOR) IS
+BEGIN
+  OPEN ref_cur1 FOR SELECT * FROM country WHERE ID < 3;
+  OPEN ref_cur2 FOR SELECT * FROM country WHERE ID >= 3;
+END select_countries;
+####### Oracle存储过程部分 End #######

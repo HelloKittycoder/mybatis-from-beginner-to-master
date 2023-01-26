@@ -22,10 +22,17 @@
                 <property name="" value=""/>
             </transactionManager>
             <dataSource type="UNPOOLED">
+                <!-- 使用mysql数据库时的需要用的连接属性 -->
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://localhost:3306/mybatis?serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false"/>
                 <property name="username" value="root"/>
                 <property name="password" value="123456"/>
+
+                <!-- 使用oracle数据库时的需要用的连接属性 -->
+                <!--<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+                <property name="url" value="jdbc:oracle:thin:@localhost:1521:mybatis"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>-->
             </dataSource>
         </environment>
     </environments>
