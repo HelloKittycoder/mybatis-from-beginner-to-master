@@ -2,6 +2,7 @@ package tk.mybatis.simple.model;
 
 import tk.mybatis.simple.type.Enabled;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,8 @@ import java.util.List;
  * @author shucheng
  * @date 2023/1/11 23:00
  */
-public class SysRole {
+public class SysRole implements Serializable {
+    private static final long serialVersionUID = -8325947258703888532L;
     /**
      * 角色ID
      */

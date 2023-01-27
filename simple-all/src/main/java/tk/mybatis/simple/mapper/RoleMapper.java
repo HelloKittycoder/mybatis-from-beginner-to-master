@@ -10,6 +10,7 @@ import java.util.List;
  * @author shucheng
  * @date 2023/1/12 12:38
  */
+@CacheNamespaceRef(RoleMapper.class)
 public interface RoleMapper {
 
     @Select({"select id, role_name roleName, enabled, " +

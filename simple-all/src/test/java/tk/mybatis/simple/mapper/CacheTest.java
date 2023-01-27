@@ -3,6 +3,7 @@ package tk.mybatis.simple.mapper;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
 import org.junit.Test;
+import tk.mybatis.simple.model.SysRole;
 import tk.mybatis.simple.model.SysUser;
 
 /**
@@ -52,6 +53,51 @@ public class CacheTest extends BaseMapperTest {
             SysUser user3 = userMapper.selectById(1L);
             // 这里的 user2 和 user3 是两个不同的实例
             Assert.assertNotEquals(user2, user3);
+        } finally {
+            // 关闭 sqlSession
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testL2Cache() {
+        // 获取 sqlSession
+        SqlSession sqlSession = getSqlSession();
+        SysRole role1;
+        try {
+            // 获取 RoleMapper 接口
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            // 调用 selectById 方法，查询 id = 1 的角色
+            role1 = roleMapper.selectById(1L);
+            // 对当前获取的对象重新赋值
+            role1.setRoleName("New Name");
+            // 再次查询获取 id 相同的角色
+            SysRole role2 = roleMapper.selectById(1L);
+            // 虽然没有更新数据库，但是这个角色名和 role1 重新赋值的名字相同
+            Assert.assertEquals("New Name", role2.getRoleName());
+            // 无论如何，role2 和 role1 完全就是同一个实例
+            Assert.assertEquals(role1, role2);
+        } finally {
+            // 关闭当前的 sqlSession
+            sqlSession.close();
+        }
+
+        System.out.println("开启新的 sqlSession");
+        // 开始另一个新的 session
+        sqlSession = getSqlSession();
+        try {
+            // 获取 RoleMapper 接口
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            // 调用 selectById 方法，查询 id = 1 的角色
+            SysRole role2 = roleMapper.selectById(1L);
+            // 第二个 session 获取的角色名是 New Name
+            Assert.assertEquals("New Name", role2.getRoleName());
+            // 这里的 role2 和前一个 session 查询的结果是两个不同的实例
+            Assert.assertNotEquals(role1, role2);
+            // 获取 role3
+            SysRole role3 = roleMapper.selectById(1L);
+            // 这里的 role2 和 role3 是两个不同的实例
+            Assert.assertNotEquals(role2, role3);
         } finally {
             // 关闭 sqlSession
             sqlSession.close();
