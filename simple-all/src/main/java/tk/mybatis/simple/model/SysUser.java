@@ -1,5 +1,6 @@
 package tk.mybatis.simple.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,8 @@ import java.util.List;
  * @author shucheng
  * @date 2023/1/11 22:58
  */
-public class SysUser {
+public class SysUser implements Serializable {
+    private static final long serialVersionUID = -328602757171077630L;
     /**
      * 用户ID
      */
