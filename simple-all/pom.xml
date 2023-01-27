@@ -68,6 +68,13 @@
             <artifactId>mybatis-ehcache</artifactId>
             <version>1.0.3</version>
         </dependency>
+
+        <!-- 集成 Redis 缓存 -->
+        <dependency>
+            <groupId>org.mybatis.caches</groupId>
+            <artifactId>mybatis-redis</artifactId>
+            <version>1.0.0-beta2</version>
+        </dependency>
     </dependencies>
 
     <build>

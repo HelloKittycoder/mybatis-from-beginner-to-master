@@ -8,7 +8,8 @@
         flushInterval="60000"
         size="512"
         readOnly="false"/> -->
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+    <cache type="org.mybatis.caches.redis.RedisCache"/>
 
     <resultMap id="roleMap" type="tk.mybatis.simple.model.SysRole">
         <id property="id" column="id"/>
