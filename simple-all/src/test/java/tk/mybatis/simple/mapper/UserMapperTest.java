@@ -607,4 +607,18 @@ public class UserMapperTest extends BaseMapperTest {
             sqlSession.close();
         }
     }
+
+    @Test
+    public void testSelectAllMap() {
+        SqlSession sqlSession = getSqlSession();
+        try {
+            // 获取 UserMapper 接口
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            List<Map> mapList = userMapper.selectAllMap();
+            System.out.println(mapList);
+        } finally {
+            // 不要忘记关闭sqlSession
+            sqlSession.close();
+        }
+    }
 }

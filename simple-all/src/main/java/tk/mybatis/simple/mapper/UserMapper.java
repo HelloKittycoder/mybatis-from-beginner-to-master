@@ -201,4 +201,10 @@ public interface UserMapper {
      * @return
      */
     int deleteUserById(Long id);
+
+    /**
+     * 查询全部用户（返回Map）
+     * @return
+     */
+    List<Map> selectAllMap();
 }

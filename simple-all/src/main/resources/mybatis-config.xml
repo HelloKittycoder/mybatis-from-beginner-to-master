@@ -21,6 +21,10 @@
                      handler="tk.mybatis.simple.type.EnabledTypeHandler"/>
     </typeHandlers>
 
+    <plugins>
+        <plugin interceptor="tk.mybatis.simple.plugin.CamelHumpInterceptor"></plugin>
+    </plugins>
+
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC">
