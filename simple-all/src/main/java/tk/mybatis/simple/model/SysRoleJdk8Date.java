@@ -1,5 +1,6 @@
 package tk.mybatis.simple.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
  * @author shucheng
  * @date 2023/1/26 17:09
  */
-public class SysRoleJdk8Date {
+public class SysRoleJdk8Date implements Serializable {
     /**
      * 角色ID
      */
