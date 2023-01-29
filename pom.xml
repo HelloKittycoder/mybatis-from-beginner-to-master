@@ -24,6 +24,7 @@
     <modules>
         <module>simple-start</module>
         <module>simple-all</module>
+        <module>mybatis-spring</module>
     </modules>
 
     <dependencyManagement>
