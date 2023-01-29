@@ -10,13 +10,10 @@
 </head>
 <body>
 <p>
-    Hello Web!
+    Hello Spring MVC!
 </p>
 <p>
-    <%
-        Date now = new Date();
-    %>
-    服务器时间：<fmt:formatDate value="<%=now%>" pattern="yyyy-MM-dd HH:mm:ss"/>
+    服务器时间：<fmt:formatDate value="${now}" pattern="yyyy-MM-dd HH:mm:ss"/>
 </p>
 </body>
 </html>
