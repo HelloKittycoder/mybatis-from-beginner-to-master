@@ -22,7 +22,10 @@
     </typeHandlers>
 
     <plugins>
-        <plugin interceptor="tk.mybatis.simple.plugin.CamelHumpInterceptor"></plugin>
+        <!-- <plugin interceptor="tk.mybatis.simple.plugin.CamelHumpInterceptor"></plugin> -->
+        <plugin interceptor="tk.mybatis.simple.plugin.PageInterceptor">
+            <property name="dialect" value="tk.mybatis.simple.plugin.MySqlDialect"/>
+        </plugin>
     </plugins>
 
     <environments default="development">

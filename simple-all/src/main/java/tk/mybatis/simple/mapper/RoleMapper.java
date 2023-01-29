@@ -1,6 +1,7 @@
 package tk.mybatis.simple.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import tk.mybatis.simple.model.SysRole;
 import tk.mybatis.simple.model.SysRoleJdk8Date;
 
@@ -102,4 +103,11 @@ public interface RoleMapper {
      * @return
      */
     List<SysRoleJdk8Date> selectRoleListJdk8Date();
+
+    /**
+     * 查询全部角色（带分页）
+     * @param rowBounds
+     * @return
+     */
+    List<SysRole> selectAll(RowBounds rowBounds);
 }

@@ -1,5 +1,6 @@
 package tk.mybatis.simple.mapper;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,6 +8,7 @@ import tk.mybatis.simple.model.CreateInfo;
 import tk.mybatis.simple.model.SysPrivilege;
 import tk.mybatis.simple.model.SysRole;
 import tk.mybatis.simple.model.SysRoleJdk8Date;
+import tk.mybatis.simple.plugin.PageRowBounds;
 import tk.mybatis.simple.type.Enabled;
 
 import java.util.Date;
@@ -300,6 +302,39 @@ public class RoleMapperTest extends BaseMapperTest {
             RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
             List<SysRoleJdk8Date> roleList = roleMapper.selectRoleListJdk8Date();
             System.out.println(roleList);
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Test
+    public void testSelectAllByRowBounds() {
+        // 获取 sqlSession
+        SqlSession sqlSession = getSqlSession();
+        try {
+            RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+            // 查询第一个，使用 RowBounds 类型时不会查询总数
+            RowBounds rowBounds = new RowBounds(0, 1);
+            List<SysRole> list = roleMapper.selectAll(rowBounds);
+            for (SysRole role : list) {
+                System.out.println("角色名：" + role.getRoleName());
+            }
+            // 使用 PageRowBounds 时会查询总数
+            PageRowBounds pageRowBounds = new PageRowBounds(0, 1);
+            list = roleMapper.selectAll(pageRowBounds);
+            // 获取总数
+            System.out.println("查询总数：" + pageRowBounds.getTotal());
+            for (SysRole role : list) {
+                System.out.println("角色名：" + role.getRoleName());
+            }
+            // 再次查询获取第二个角色
+            pageRowBounds = new PageRowBounds(1, 1);
+            list = roleMapper.selectAll(pageRowBounds);
+            // 获取总数
+            System.out.println("查询总数：" + pageRowBounds.getTotal());
+            for (SysRole role : list) {
+                System.out.println("角色名：" + role.getRoleName());
+            }
         } finally {
             sqlSession.close();
         }
