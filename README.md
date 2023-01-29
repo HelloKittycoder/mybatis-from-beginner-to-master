@@ -10,3 +10,8 @@ simple-start
 simple-all
 
 使用前，先执行下prepareData.sql
+
+#### 第9章 Spring 集成 MyBatis
+mybatis-spring
+
+使用前，先执行下prepareData.sql
